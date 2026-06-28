@@ -1,196 +1,281 @@
 import React, { useState } from 'react';
-import Login from './Login';
-import ApplyForm from './ApplyForm';
 
-function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+export default function App() {
+  // Navigation States: 'login', 'dashboard', 'jobs', 'apply_form', 'applications', 'mentors'
+  const [currentPage, setCurrentPage] = useState('login');
   const [selectedJob, setSelectedJob] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
 
-  // Realistic alumni-posted job data
-  const jobs = [
-    { 
-      id: 1, 
-      title: 'Python Developer', 
-      company: 'TCS', 
-      location: 'Hyderabad',
-      salary: '₹4.5 - ₹6 LPA',
-      postedBy: 'Gayatri Kuna (Batch of 2024)', 
-      desc: 'Looking for freshers with strong core Python concepts and SQL knowledge.' 
-    },
-    { 
-      id: 2, 
-      title: 'Associate Cloud Engineer', 
-      company: 'Google', 
-      location: 'Bangalore (Remote)',
-      salary: '₹12 - ₹15 LPA',
-      postedBy: 'Suresh Kumar (Batch of 2021)', 
-      desc: 'Experience with Google Cloud Platform (GCP), IAM, and basic networking concepts.' 
-    },
-    { 
-      id: 3, 
-      title: 'Frontend Developer (React)', 
-      company: 'Amazon', 
-      location: 'Chennai',
-      salary: '₹8 - ₹10 LPA',
-      postedBy: 'Priya Sharma (Batch of 2022)', 
-      desc: 'Strong hold on HTML5, CSS3, JavaScript, and React.js hooks.' 
-    }
+  // Sample Data matching the exact text in ChatGPT Image Jun 28, 2026, 07_41_20 PM.png
+  const stats = [
+    { label: "Alumni Mentors", value: "120+", color: "#4f46e5" },
+    { label: "Jobs Available", value: "58", color: "#2563eb" },
+    { label: "Applications", value: "12", color: "#16a34a" },
+    { label: "Events", value: "8", color: "#ea580c" }
   ];
 
-  // Realistic Success Feedbacks
-  const testimonials = [
-    {
-      id: 1,
-      name: "Anjali Devi",
-      role: "Software Engineer at Microsoft",
-      batch: "Batch of 2023",
-      text: "This portal changed my career! I got a direct referral from my senior for Microsoft. The interview guidelines they shared were priceless."
-    },
-    {
-      id: 2,
-      name: "Vikas Reddy",
-      role: "Data Analyst at Accenture",
-      batch: "Batch of 2024",
-      text: "Applying through standard job boards never worked for me. But here, an alumnus reviewed my application personally and took my mock interview!"
-    }
+  const recentOpportunities = [
+    { title: "Software Developer at Infosys", type: "Full Time", date: "20 May 2024" },
+    { title: "Web Developer Intern at TCS", type: "Internship", date: "18 May 2024" },
+    { title: "Data Analyst at Wipro", type: "Full Time", date: "15 May 2024" }
   ];
 
-  const filteredJobs = jobs.filter(job => 
-    job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    job.company.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const jobsList = [
+    { id: 1, title: "Software Developer", company: "Infosys Limited", type: "Full Time", location: "Bangalore", package: "₹ 6.50 LPA", logo: "I" },
+    { id: 2, title: "System Engineer", company: "Tata Consultancy Services", type: "Full Time", location: "Hyderabad", package: "₹ 4.20 LPA", logo: "T" },
+    { id: 3, title: "Data Analyst", company: "Wipro Limited", type: "Full Time", location: "Bangalore", package: "₹ 5.00 LPA", logo: "W" },
+    { id: 4, title: "Associate Software Engineer", company: "Accenture", type: "Full Time", location: "Pune", package: "₹ 4.50 LPA", logo: "A" }
+  ];
 
-  if (!isLoggedIn) {
-    return <Login onLoginSuccess={() => setIsLoggedIn(true)} />;
+  const trackingApplications = [
+    { title: "Software Developer", company: "Infosys", date: "20 May 2024", status: "Under Review", color: "#eab308" },
+    { title: "System Engineer", company: "TCS", date: "18 May 2024", status: "Shortlisted", color: "#22c55e" },
+    { title: "Data Analyst", company: "Wipro", date: "15 May 2024", status: "Interview Scheduled", color: "#3b82f6" },
+    { title: "Web Developer Intern", company: "TCS", date: "10 May 2024", status: "Applied", color: "#64748b" },
+    { title: "Associate Software Engineer", company: "Accenture", date: "05 May 2024", status: "Rejected", color: "#ef4444" }
+  ];
+
+  const mentorsList = [
+    { name: "Rahul Sharma", role: "Software Engineer at Google", exp: "10+ Years Experience" },
+    { name: "Priya Verma", role: "Product Manager at Microsoft", exp: "8+ Years Experience" },
+    { name: "Ankit Patel", role: "Data Scientist at Amazon", exp: "7+ Years Experience" },
+    { name: "Sneha Reddy", role: "HR Manager at Infosys", exp: "6+ Years Experience" },
+    { name: "Vikram Singh", role: "Backend Developer at TCS", exp: "9+ Years Experience" },
+    { name: "Neha Gupta", role: "UI/UX Designer at Wipro", exp: "6+ Years Experience" }
+  ];
+
+  // Action Helpers
+  const triggerApply = (job) => {
+    setSelectedJob(job);
+    setCurrentPage('apply_form');
+  };
+
+  const submitApplicationForm = (e) => {
+    e.preventDefault();
+    alert("Application submitted successfully!");
+    setCurrentPage('applications');
+  };
+
+  /* ==================== 1. LOGIN PAGE VIEW ==================== */
+  if (currentPage === 'login') {
+    return (
+      <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'Segoe UI, sans-serif' }}>
+        <div style={{ flex: 1, background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', color: '#fff', padding: '40px', textAlign: 'center' }}>
+          <div style={{ fontSize: '64px', marginBottom: '20px' }}>🎓</div>
+          <h1 style={{ fontSize: '36px', margin: '0 0 10px 0', fontWeight: 'bold' }}>Alumni Student<br/>Career Bridge</h1>
+          <p style={{ color: '#bfdbfe', maxWidth: '300px' }}>Connecting Students with Alumni for a Better Tomorrow</p>
+        </div>
+        <div style={{ flex: 1.2, background: '#f8fafc', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '40px' }}>
+          <div style={{ background: '#fff', padding: '40px', borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)', width: '100%', maxWidth: '400px' }}>
+            <h2 style={{ color: '#1e293b', margin: '0 0 5px 0' }}>Welcome Back!</h2>
+            <p style={{ color: '#64748b', margin: '0 0 25px 0', fontSize: '14px' }}>Login to continue your journey</p>
+            <form onSubmit={(e) => { e.preventDefault(); setCurrentPage('dashboard'); }}>
+              <label style={{ display: 'block', marginBottom: '8px', color: '#475569', fontSize: '14px' }}>Email Address</label>
+              <input type="email" placeholder="name@example.com" style={{ width: '100%', padding: '12px', marginBottom: '20px', borderRadius: '8px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }} required />
+              <label style={{ display: 'block', marginBottom: '8px', color: '#475569', fontSize: '14px' }}>Password</label>
+              <input type="password" placeholder="••••••••" style={{ width: '100%', padding: '12px', marginBottom: '15px', borderRadius: '8px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }} required />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', fontSize: '13px' }}>
+                <label style={{ color: '#64748b', display: 'flex', alignItems: 'center', gap: '5px' }}><input type="checkbox" /> Remember Me</label>
+                <a href="#forgot" style={{ color: '#2563eb', textDecoration: 'none' }}>Forgot Password?</a>
+              </div>
+              <button type="submit" style={{ width: '100%', padding: '14px', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' }}>Login</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
   }
 
+  /* ==================== MAIN DASHBOARD LAYOUT WRAPPER ==================== */
+  const renderSidebar = () => (
+    <div style={{ width: '260px', background: '#0f172a', color: '#94a3b8', display: 'flex', flexDirection: 'column', padding: '20px 0' }}>
+      <div style={{ padding: '0 20px 20px 20px', borderBottom: '1px solid #1e293b', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <span style={{ fontSize: '24px' }}>🎓</span>
+        <span style={{ color: '#fff', fontWeight: 'bold', fontSize: '16px' }}>Alumni Student<br/><span style={{ fontSize: '12px', color: '#38bdf8' }}>Career Bridge</span></span>
+      </div>
+      <div style={{ flex: 1, marginTop: '20px' }}>
+        {[
+          { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+          { id: 'mentors', label: 'Alumni Mentors', icon: '👥' },
+          { id: 'jobs', label: 'Jobs & Internships', icon: '💼' },
+          { id: 'applications', label: 'Applications', icon: '📝' },
+        ].map((item) => (
+          <div key={item.id} onClick={() => setCurrentPage(item.id)} style={{ padding: '12px 24px', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', background: currentPage === item.id ? '#1e293b' : 'transparent', color: currentPage === item.id ? '#38bdf8' : '#94a3b8', borderLeft: currentPage === item.id ? '4px solid #38bdf8' : 'none' }}>
+            <span>{item.icon}</span>{item.label}
+          </div>
+        ))}
+      </div>
+      <div onClick={() => setCurrentPage('login')} style={{ padding: '15px 24px', borderTop: '1px solid #1e293b', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px', color: '#f87171' }}>
+        <span>🚪</span> Logout
+      </div>
+    </div>
+  );
+
   return (
-    <div style={{ padding: '0', margin: '0', fontFamily: "'Segoe UI', Roboto, sans-serif", backgroundColor: '#f4f6f9', minHeight: '100vh' }}>
-      
-      {/* Navigation Header */}
-      <header style={{ background: 'linear-gradient(135deg, #0056b3, #003d82)', color: 'white', padding: '15px 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-        <h2 style={{ margin: 0, fontSize: '24px', letterSpacing: '0.5px' }}>🎓 Alumni-Student Career Bridge</h2>
-        <button onClick={() => setIsLoggedIn(false)} style={{ background: '#ff4d4d', color: 'white', border: 'none', padding: '10px 18px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
-          Logout
-        </button>
-      </header>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#f8fafc', fontFamily: 'Segoe UI, sans-serif' }}>
+      {renderSidebar()}
 
-      {/* Main Body */}
-      <main style={{ maxWidth: '1100px', margin: '30px auto', padding: '0 20px' }}>
-        
-        {/* Welcome Banner */}
-        <div style={{ background: 'linear-gradient(135deg, #ffffff, #e6f0ff)', padding: '35px', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', marginBottom: '30px', textAlign: 'center', border: '1px solid #d0e1ff' }}>
-          <h1 style={{ color: '#0056b3', margin: '0 0 10px 0', fontSize: '28px' }}>Welcome to Your Network, Student! 👋</h1>
-          <p style={{ color: '#444', fontSize: '16px', margin: '0 0 25px 0', maxWidth: '700px', marginLeft: 'auto', marginRight: 'auto' }}>
-            Skip the generic HR filters. Connect directly with alumni working at top tech firms, get internal referrals, and accelerate your career.
-          </p>
-          <input 
-            type="text" 
-            placeholder="🔍 Search hidden job opportunities (e.g., Python, Amazon, Remote)..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ width: '85%', maxWidth: '600px', padding: '14px 25px', borderRadius: '30px', border: '2px solid #0056b3', fontSize: '16px', outline: 'none', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}
-          />
-        </div>
-
-        {/* 🌟 BENEFITS SECTION (NEW FEATURE) */}
-        <section style={{ marginBottom: '40px' }}>
-          <h2 style={{ color: '#222', textAlign: 'center', marginBottom: '20px' }}>Why Use This Portal? 🚀</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
-            <div style={{ background: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', textAlign: 'center' }}>
-              <div style={{ fontSize: '30px', marginBottom: '10px' }}>🎯</div>
-              <h4 style={{ margin: '0 0 10px 0', color: '#0056b3' }}>Direct Referrals</h4>
-              <p style={{ margin: 0, fontSize: '14px', color: '#666' }}>Your application goes directly to the alumni instead of getting lost in bulk job portals.</p>
-            </div>
-            <div style={{ background: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', textAlign: 'center' }}>
-              <div style={{ fontSize: '30px', marginBottom: '10px' }}>💡</div>
-              <h4 style={{ margin: '0 0 10px 0', color: '#0056b3' }}>Insider Mentorship</h4>
-              <p style={{ margin: 0, fontSize: '14px', color: '#666' }}>Connect with seniors to understand company culture, round structures, and clear interview tips.</p>
-            </div>
-            <div style={{ background: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', textAlign: 'center' }}>
-              <div style={{ fontSize: '30px', marginBottom: '10px' }}>🔓</div>
-              <h4 style={{ margin: '0 0 10px 0', color: '#0056b3' }}>Hidden Job Market</h4>
-              <p style={{ margin: 0, fontSize: '14px', color: '#666' }}>Access exclusive early-stage internal openings before they are published anywhere else.</p>
-            </div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        {/* TOP BAR */}
+        <header style={{ background: '#fff', padding: '15px 30px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', borderBottom: '1px solid #e2e8f0' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontWeight: '600', color: '#334155' }}>Gayatri Kuna</span>
+            <div style={{ width: '35px', height: '35px', borderRadius: '50%', background: '#cbd5e1', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>G</div>
           </div>
-        </section>
+        </header>
 
-        {/* TWO COLUMN LAYOUT: JOBS & TESTIMONIALS */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)', gap: '30px' }}>
+        {/* INNER DYNAMIC PAGE CONTAINER */}
+        <main style={{ padding: '30px', flex: 1 }}>
           
-          {/* LEFT: JOB FEED */}
-          <div>
-            <h3 style={{ color: '#333', marginTop: 0, marginBottom: '15px', borderBottom: '2px solid #0056b3', paddingBottom: '5px' }}>
-              🔥 Exclusive Alumni Job Feed ({filteredJobs.length})
-            </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              {filteredJobs.length > 0 ? (
-                filteredJobs.map((job) => (
-                  <div key={job.id} style={{ backgroundColor: 'white', borderLeft: '6px solid #0056b3', padding: '20px', borderRadius: '8px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                      <h3 style={{ color: '#0056b3', margin: 0, fontSize: '18px' }}>{job.title}</h3>
-                      <span style={{ background: '#e1ecf4', color: '#0056b3', padding: '4px 10px', borderRadius: '15px', fontSize: '12px', fontWeight: 'bold' }}>{job.location}</span>
+          {/* ==================== 2. STUDENT DASHBOARD ==================== */}
+          {currentPage === 'dashboard' && (
+            <div>
+              <h2 style={{ color: '#1e293b', margin: '0 0 5px 0' }}>Welcome, Student! 🎓</h2>
+              <p style={{ color: '#64748b', margin: '0 0 25px 0' }}>Explore opportunities and build your career with alumni guidance.</p>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '30px' }}>
+                {stats.map((stat, idx) => (
+                  <div key={idx} style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+                    <div style={{ color: '#64748b', fontSize: '14px', fontWeight: '500' }}>{stat.label}</div>
+                    <div style={{ fontSize: '28px', fontWeight: 'bold', color: stat.color, marginTop: '5px' }}>{stat.value}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ background: '#fff', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+                <h3 style={{ color: '#1e293b', margin: '0 0 20px 0' }}>Recent Opportunities</h3>
+                {recentOpportunities.map((op, idx) => (
+                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 0', borderBottom: idx !== recentOpportunities.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{ fontSize: '20px' }}>💼</span>
+                      <div>
+                        <div style={{ fontWeight: '600', color: '#334155' }}>{op.title}</div>
+                        <span style={{ fontSize: '12px', background: '#e0f2fe', color: '#0369a1', padding: '2px 8px', borderRadius: '12px', marginTop: '4px', display: 'inline-block' }}>{op.type}</span>
+                      </div>
                     </div>
-                    <h4 style={{ margin: '0 0 12px 0', color: '#555', fontSize: '15px' }}>🏢 {job.company} • <span style={{ color: '#28a745' }}>{job.salary}</span></h4>
-                    <p style={{ color: '#666', fontSize: '13.5px', lineHeight: '1.5', margin: '0 0 15px 0' }}>{job.desc}</p>
-                    
-                    <div style={{ borderTop: '1px solid #eee', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontSize: '12px', color: '#777' }}>📌 Alumnus: <b>{job.postedBy}</b></span>
-                      <button 
-                        onClick={() => setSelectedJob(job.title)} 
-                        style={{ padding: '8px 16px', background: '#0056b3', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '13px' }}
-                      >
-                        Apply via Referral
-                      </button>
+                    <span style={{ color: '#94a3b8', fontSize: '14px' }}>{op.date}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ==================== 3. JOBS / COMPANIES LIST ==================== */}
+          {currentPage === 'jobs' && (
+            <div>
+              <h2 style={{ color: '#1e293b', margin: '0 0 5px 0' }}>Jobs & Internships</h2>
+              <p style={{ color: '#64748b', margin: '0 0 25px 0' }}>Explore jobs and internships posted by top companies.</p>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px' }}>
+                {jobsList.map((job) => (
+                  <div key={job.id} style={{ background: '#fff', padding: '20px', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                      <div style={{ width: '50px', height: '50px', background: '#eff6ff', color: '#2563eb', borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', fontSize: '20px' }}>{job.logo}</div>
+                      <div>
+                        <h4 style={{ margin: '0 0 5px 0', color: '#1e293b' }}>{job.title}</h4>
+                        <div style={{ color: '#64748b', fontSize: '14px' }}>{job.company} • <span style={{ color: '#0f766e' }}>{job.type}</span> • {job.location}</div>
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ color: '#16a34a', fontWeight: 'bold', fontSize: '18px', marginBottom: '10px' }}>{job.package}</div>
+                      <button onClick={() => triggerApply(job)} style={{ background: '#4f46e5', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', fontWeight: '500', cursor: 'pointer' }}>View Details</button>
                     </div>
                   </div>
-                ))
-              ) : (
-                <div style={{ textAlign: 'center', padding: '30px', color: '#888', background: 'white', borderRadius: '8px' }}>
-                  No matching jobs found! Try searching for another company.
-                </div>
-              )}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* RIGHT: ALUMNI FEEDBACK / SUCCESS STORIES (NEW FEATURE) */}
-          <div>
-            <h3 style={{ color: '#333', marginTop: 0, marginBottom: '15px', borderBottom: '2px solid #28a745', paddingBottom: '5px' }}>
-              💚 Alumni Success Stories
-            </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-              {testimonials.map((t) => (
-                <div key={t.id} style={{ background: '#fff', padding: '15px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' }}>
-                  <p style={{ fontStyle: 'italic', color: '#444', fontSize: '13px', margin: '0 0 10px 0', lineHeight: '1.4' }}>"{t.text}"</p>
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span style={{ fontWeight: 'bold', color: '#28a745', fontSize: '13px' }}>{t.name}</span>
-                    <span style={{ fontSize: '11px', color: '#666' }}>{t.role}</span>
-                    <span style={{ fontSize: '11px', color: '#999' }}>({t.batch})</span>
+          {/* ==================== 4. STUDENT APPLICATION FORM ==================== */}
+          {currentPage === 'apply_form' && selectedJob && (
+            <div style={{ background: '#fff', borderRadius: '12px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)', overflow: 'hidden' }}>
+              <div style={{ background: '#4f46e5', color: '#fff', padding: '20px 30px' }}>
+                <h3 style={{ margin: 0 }}>Apply for: {selectedJob.title} - {selectedJob.company}</h3>
+                <p style={{ margin: '5px 0 0 0', color: '#e0e7ff', fontSize: '14px' }}>Fill in your details to apply for this job.</p>
+              </div>
+              <form onSubmit={submitApplicationForm} style={{ padding: '30px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#334155', fontWeight: '500' }}>Full Name</label>
+                    <input type="text" placeholder="Enter your full name" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #cbd5e1' }} required />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#334155', fontWeight: '500' }}>Email</label>
+                    <input type="email" placeholder="Enter your email" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #cbd5e1' }} required />
                   </div>
                 </div>
-              ))}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#334155', fontWeight: '500' }}>Phone Number</label>
+                    <input type="text" placeholder="Enter your phone number" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #cbd5e1' }} required />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#334155', fontWeight: '500' }}>College / University</label>
+                    <input type="text" placeholder="Enter your college name" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #cbd5e1' }} required />
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '15px', justifyContent: 'flex-end', marginTop: '30px' }}>
+                  <button type="button" onClick={() => setCurrentPage('jobs')} style={{ padding: '10px 20px', background: '#e2e8f0', color: '#334155', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>Cancel</button>
+                  <button type="submit" style={{ padding: '10px 20px', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Submit Application</button>
+                </div>
+              </form>
             </div>
-            
-            {/* Quick Stats Widget */}
-            <div style={{ marginTop: '20px', background: 'linear-gradient(135deg, #28a745, #1e7e34)', color: 'white', padding: '15px', borderRadius: '8px', textAlign: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-              <h4 style={{ margin: '0 0 5px 0' }}>Community Impact</h4>
-              <h2 style={{ margin: '0 0 5px 0', fontSize: '28px' }}>500+</h2>
-              <p style={{ margin: 0, fontSize: '12px', opacity: 0.9 }}>Students referred & placed this year!</p>
+          )}
+
+          {/* ==================== 5. MY APPLICATIONS (TRACK STATUS) ==================== */}
+          {currentPage === 'applications' && (
+            <div style={{ background: '#fff', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+              <h2 style={{ color: '#1e293b', margin: '0 0 5px 0' }}>My Applications</h2>
+              <p style={{ color: '#64748b', margin: '0 0 25px 0' }}>Track the status of your job applications.</p>
+
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                <thead>
+                  <tr style={{ borderBottom: '2px solid #f1f5f9', color: '#64748b', fontSize: '14px' }}>
+                    <th style={{ padding: '12px' }}>Job Title</th>
+                    <th style={{ padding: '12px' }}>Company</th>
+                    <th style={{ padding: '12px' }}>Applied Date</th>
+                    <th style={{ padding: '12px' }}>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {trackingApplications.map((app, idx) => (
+                    <tr key={idx} style={{ borderBottom: '1px solid #f1f5f9', color: '#334155' }}>
+                      <td style={{ padding: '14px', fontWeight: '500' }}>{app.title}</td>
+                      <td style={{ padding: '14px' }}>{app.company}</td>
+                      <td style={{ padding: '14px', color: '#64748b' }}>{app.date}</td>
+                      <td style={{ padding: '14px' }}>
+                        <span style={{ padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600', background: `${app.color}20`, color: app.color }}>
+                          {app.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          </div>
+          )}
 
-        </div>
+          {/* ==================== 6. ALUMNI MENTORS PAGE ==================== */}
+          {currentPage === 'mentors' && (
+            <div>
+              <h2 style={{ color: '#1e293b', margin: '0 0 5px 0' }}>Our Alumni Mentors</h2>
+              <p style={{ color: '#64748b', margin: '0 0 25px 0' }}>Connect with experienced alumni and get guidance.</p>
 
-        {/* Dynamic Form Placement */}
-        {selectedJob && (
-          <div style={{ marginTop: '30px' }}>
-            <ApplyForm jobTitle={selectedJob} onClose={() => setSelectedJob(null)} />
-          </div>
-        )}
-      </main>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '25px' }}>
+                {mentorsList.map((mentor, idx) => (
+                  <div key={idx} style={{ background: '#fff', padding: '25px', borderRadius: '12px', textAlign: 'center', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+                    <div style={{ width: '70px', height: '70px', borderRadius: '50%', background: '#f1f5f9', margin: '0 auto 15px auto', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '28px' }}>👤</div>
+                    <h4 style={{ margin: '0 0 5px 0', color: '#1e293b' }}>{mentor.name}</h4>
+                    <p style={{ margin: '0 0 5px 0', color: '#4f46e5', fontSize: '14px', fontWeight: '500' }}>{mentor.role}</p>
+                    <p style={{ margin: '0 0 20px 0', color: '#94a3b8', fontSize: '12px' }}>{mentor.exp}</p>
+                    <button onClick={() => alert(`Connecting with ${mentor.name}...`)} style={{ width: '100%', background: '#4f46e5', color: '#fff', border: 'none', padding: '10px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Connect via LinkedIn</button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+        </main>
+      </div>
     </div>
   );
 }
-
-export default App;
